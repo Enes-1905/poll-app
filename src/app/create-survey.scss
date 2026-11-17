@@ -135,6 +135,8 @@
     gap: 8px;
   }
 
+  // DELETE BUTTON
+
   &__delete {
     display: flex;
     align-items: center;
@@ -146,11 +148,26 @@
     padding: 4px;
 
     border: none;
-    border-radius: 3px;
-    background: transparent;
-    color: #ffffff;
+    border-radius: 5px;
+    background-color: transparent;
 
     cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    img {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background-color: #ee9236;
+    }
+
+    &:active {
+      background-color: #ffb770;
+    }
   }
 
   &__bottom-fields {
@@ -160,6 +177,8 @@
     margin-top: 16px;
   }
 }
+
+// RESPONSIVE FORM
 
 @media (max-width: 900px) {
   .create-survey {
@@ -191,6 +210,7 @@
     }
   }
 }
+
 // QUESTIONS LAYOUT
 
 .create-survey__questions {

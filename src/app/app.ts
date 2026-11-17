@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 interface Survey {
   id: number;
@@ -8,9 +9,21 @@ interface Survey {
   status: 'active' | 'past';
 }
 
+interface SurveyAnswer {
+  id: number;
+  text: string;
+}
+
+interface SurveyQuestion {
+  id: number;
+  text: string;
+  multipleAnswers: boolean;
+  answers: SurveyAnswer[];
+}
+
 @Component({
   selector: 'app-root',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -29,6 +42,22 @@ export class App {
     'Gaming',
     'Healthy Lifestyle',
   ];
+
+  // CREATE SURVEY
+
+  surveyName = '';
+  surveyEndDate = '';
+  surveyCategory = '';
+  surveyDescription = '';
+
+  private nextQuestionId = 1;
+  private nextAnswerId = 1;
+
+  questions: SurveyQuestion[] = [
+    this.createQuestion(),
+  ];
+
+  // EXISTING SURVEYS
 
   surveys: Survey[] = [
     {
@@ -75,6 +104,8 @@ export class App {
     },
   ];
 
+  // HOME PAGE
+
   get highlightSurveys(): Survey[] {
     return [
       this.surveys[0],
@@ -115,6 +146,8 @@ export class App {
     this.categoriesOpen = false;
   }
 
+  // PAGE NAVIGATION
+
   /**
    * Opens the Create Survey page.
    */
@@ -131,9 +164,108 @@ export class App {
 
   /**
    * Opens a selected survey.
-   * Navigation will be implemented later.
    */
   openSurvey(id: number): void {
     // Single Survey page will be implemented later.
+  }
+
+  // QUESTION FUNCTIONS
+
+  /**
+   * Creates an empty question with two answers.
+   */
+  private createQuestion(): SurveyQuestion {
+    return {
+      id: this.nextQuestionId++,
+      text: '',
+      multipleAnswers: false,
+      answers: [
+        this.createAnswer(),
+        this.createAnswer(),
+      ],
+    };
+  }
+
+  /**
+   * Adds a new question to the survey.
+   */
+  addQuestion(): void {
+    this.questions.push(this.createQuestion());
+  }
+
+  /**
+   * Removes a question while keeping at least one.
+   */
+  removeQuestion(questionId: number): void {
+    if (this.questions.length <= 1) {
+      return;
+    }
+
+    this.questions = this.questions.filter(
+      (question) => question.id !== questionId,
+    );
+  }
+
+  // ANSWER FUNCTIONS
+
+  /**
+   * Creates an empty answer.
+   */
+  private createAnswer(): SurveyAnswer {
+    return {
+      id: this.nextAnswerId++,
+      text: '',
+    };
+  }
+
+  /**
+   * Adds an answer to the selected question.
+   */
+  addAnswer(question: SurveyQuestion): void {
+    question.answers.push(this.createAnswer());
+  }
+
+  /**
+   * Removes an answer while keeping at least two.
+   */
+  removeAnswer(
+    question: SurveyQuestion,
+    answerId: number,
+  ): void {
+    if (question.answers.length <= 2) {
+      return;
+    }
+
+    question.answers = question.answers.filter(
+      (answer) => answer.id !== answerId,
+    );
+  }
+
+  /**
+   * Returns the alphabetical label for an answer.
+   */
+  getAnswerLabel(index: number): string {
+    let label = '';
+
+    do {
+      label = String.fromCharCode(65 + (index % 26)) + label;
+      index = Math.floor(index / 26) - 1;
+    } while (index >= 0);
+
+    return label;
+  }
+
+  // CLEAR SURVEY FIELDS
+
+  clearSurveyName(): void {
+    this.surveyName = '';
+  }
+
+  clearSurveyEndDate(): void {
+    this.surveyEndDate = '';
+  }
+
+  clearSurveyDescription(): void {
+    this.surveyDescription = '';
   }
 }
