@@ -15,6 +15,8 @@ interface Survey {
   styleUrl: './app.scss',
 })
 export class App {
+  currentPage: 'home' | 'create-survey' = 'home';
+
   activeTab: 'active' | 'past' = 'active';
 
   categoriesOpen = false;
@@ -113,11 +115,25 @@ export class App {
     this.categoriesOpen = false;
   }
 
+  /**
+   * Opens the Create Survey page.
+   */
   createSurvey(): void {
-    // Navigation will be added when the Create Survey page exists.
+    this.currentPage = 'create-survey';
   }
 
+  /**
+   * Returns to the home page.
+   */
+  goHome(): void {
+    this.currentPage = 'home';
+  }
+
+  /**
+   * Opens a selected survey.
+   * Navigation will be implemented later.
+   */
   openSurvey(id: number): void {
-    // Navigation will be added when the Single Survey page exists.
+    // Single Survey page will be implemented later.
   }
 }
