@@ -248,27 +248,57 @@
 
             </div>
 
-            <!-- CATEGORY -->
+            <!-- CATEGORY: CUSTOM FIGMA DROPDOWN -->
             <div class="create-survey__field">
 
-              <label for="survey-category">
-                Choose category
-              </label>
+              <div class="create-survey__category">
 
-              <select
-                id="survey-category"
-                name="surveyCategory"
-                [(ngModel)]="surveyCategory"
-              >
-                <option value="">Choose category</option>
-                <option value="all">All Surveys</option>
-                <option value="team">Team Activities</option>
-                <option value="health">Health &amp; Wellness</option>
-                <option value="gaming">Gaming &amp; Entertainment</option>
-                <option value="education">Education &amp; Learning</option>
-                <option value="lifestyle">Lifestyle &amp; Preferences</option>
-                <option value="technology">Technology &amp; Innovation</option>
-              </select>
+                <!-- DROPDOWN BUTTON -->
+                <button
+                  class="create-survey__category-trigger"
+                  type="button"
+                  aria-label="Choose category"
+                  [attr.aria-expanded]="surveyCategoryOpen"
+                  aria-controls="survey-category-menu"
+                  (click)="toggleSurveyCategory()"
+                >
+                  <span>Choose category</span>
+
+                  <span
+                    class="create-survey__category-arrow"
+                    [class.create-survey__category-arrow--open]="surveyCategoryOpen"
+                    aria-hidden="true"
+                  >
+                    {{ surveyCategoryOpen ? '▲' : '▼' }}
+                  </span>
+                </button>
+
+                <!-- SELECTED CATEGORY -->
+                @if (surveyCategory && !surveyCategoryOpen) {
+                  <span class="create-survey__category-selected">
+                    {{ surveyCategory }}
+                  </span>
+                }
+
+                <!-- DROPDOWN MENU -->
+                @if (surveyCategoryOpen) {
+                  <div
+                    id="survey-category-menu"
+                    class="create-survey__category-menu"
+                  >
+                    @for (category of surveyCategoryOptions; track category) {
+                      <button
+                        class="create-survey__category-option"
+                        type="button"
+                        (click)="selectSurveyCategory(category)"
+                      >
+                        {{ category }}
+                      </button>
+                    }
+                  </div>
+                }
+
+              </div>
 
             </div>
 
@@ -396,21 +426,23 @@
 
             }
 
-            <!-- ADD ANSWER -->
-            <button
-              class="create-survey__add-answer"
-              type="button"
-              (click)="addAnswer(question)"
-            >
-              Add answer
+            <!-- ADD ANSWER: MAXIMUM 6 -->
+            @if (question.answers.length < 6) {
+              <button
+                class="create-survey__add-answer"
+                type="button"
+                (click)="addAnswer(question)"
+              >
+                Add answer
 
-              <img
-                src="/assets/addcircle.svg"
-                alt=""
-                width="18"
-                height="18"
-              />
-            </button>
+                <img
+                  src="/assets/addcircle.svg"
+                  alt=""
+                  width="18"
+                  height="18"
+                />
+              </button>
+            }
 
           </div>
 

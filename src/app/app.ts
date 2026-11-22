@@ -43,12 +43,25 @@ export class App {
     'Healthy Lifestyle',
   ];
 
-  // CREATE SURVEY
+// CREATE SURVEY
 
-  surveyName = '';
-  surveyEndDate = '';
-  surveyCategory = '';
-  surveyDescription = '';
+surveyName = '';
+surveyEndDate = '';
+surveyCategory = '';
+surveyDescription = '';
+
+// CATEGORY DROPDOWN (CREATE SURVEY)
+
+surveyCategoryOpen = false;
+
+surveyCategoryOptions = [
+  'Team Activities',
+  'Health & Wellness',
+  'Gaming & Entertainment',
+  'Education & Learning',
+  'Lifestyle & Preferences',
+  'Technology & Innovation',
+];
 
   private nextQuestionId = 1;
   private nextAnswerId = 1;
@@ -221,9 +234,13 @@ export class App {
   /**
    * Adds an answer to the selected question.
    */
-  addAnswer(question: SurveyQuestion): void {
-    question.answers.push(this.createAnswer());
+addAnswer(question: SurveyQuestion): void {
+  if (question.answers.length >= 6) {
+    return;
   }
+
+  question.answers.push(this.createAnswer());
+}
 
   /**
    * Removes an answer while keeping at least two.
@@ -268,4 +285,14 @@ export class App {
   clearSurveyDescription(): void {
     this.surveyDescription = '';
   }
+  // CREATE SURVEY CATEGORY FUNCTIONS
+
+toggleSurveyCategory(): void {
+  this.surveyCategoryOpen = !this.surveyCategoryOpen;
+}
+
+selectSurveyCategory(category: string): void {
+  this.surveyCategory = category;
+  this.surveyCategoryOpen = false;
+}
 }
