@@ -50,6 +50,7 @@ surveyEndDate = '';
 surveyCategory = '';
 surveyDescription = '';
 
+publishToastVisible = false;
 // CATEGORY DROPDOWN (CREATE SURVEY)
 
 surveyCategoryOpen = false;
@@ -294,5 +295,12 @@ toggleSurveyCategory(): void {
 selectSurveyCategory(category: string): void {
   this.surveyCategory = category;
   this.surveyCategoryOpen = false;
+}
+showPublishToast(): void {
+  this.publishToastVisible = true;
+}
+
+closePublishToast(): void {
+  this.publishToastVisible = false;
 }
 }

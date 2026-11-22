@@ -1,13 +1,21 @@
+// ==========================================
+// CREATE SURVEY PAGE
+// ==========================================
+
 .create-survey {
+  position: relative;
   box-sizing: border-box;
   width: min(1218px, calc(100% - 48px));
   min-height: 850px;
   margin: 40px auto;
   padding: 40px 64px;
+
   border-radius: 5px 100px 5px 5px;
   background-color: #352439;
   color: #fefdff;
   font-family: "Mulish", sans-serif;
+
+  // HEADER
 
   &__header {
     display: flex;
@@ -25,41 +33,55 @@
     }
   }
 
+  // DRAFT BADGE
+
   &__badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     width: 59px;
     height: 26px;
     padding: 3px 12px 3px 8px;
+
     border-radius: 0 14px 0 0;
     background-color: #ffcfa1;
     color: #35273a;
     font-size: 16px;
   }
 
+  // CANCEL BUTTON
+
   &__cancel {
     display: flex;
     align-items: center;
     gap: 12px;
+
     padding: 10px 14px;
     border: none;
     border-radius: 10px;
+
     background-color: #80605c;
     color: #ffffff;
+
     font-family: "Mulish", sans-serif;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
   }
 
+  // FORM CONTAINER
+
   &__form {
     width: 100%;
     min-height: 549px;
     padding: 40px 32px;
+
     border-radius: 5px 80px 5px 5px;
     background-color: rgba(142, 112, 153, 0.16);
   }
+
+  // FORM GRID
 
   &__fields {
     display: grid;
@@ -71,6 +93,8 @@
   &__right {
     min-width: 0;
   }
+
+  // FORM FIELDS
 
   &__field {
     display: flex;
@@ -93,8 +117,10 @@
       min-width: 0;
       border: none;
       border-radius: 5px;
+
       background-color: #ffffff;
       color: #35273a;
+
       font-family: "Mulish", sans-serif;
       font-size: 16px;
       outline-offset: 2px;
@@ -114,6 +140,8 @@
     }
   }
 
+  // INPUT ROW
+
   &__input-row {
     display: flex;
     align-items: flex-start;
@@ -127,12 +155,15 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+
     width: 26px;
     height: 26px;
     padding: 4px;
+
     border: none;
     border-radius: 5px;
     background-color: transparent;
+
     cursor: pointer;
     transition: background-color 0.2s ease;
 
@@ -152,6 +183,8 @@
     }
   }
 
+  // END DATE + CATEGORY
+
   &__bottom-fields {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -160,7 +193,9 @@
   }
 }
 
-// CATEGORY DROPDOWN – FIGMA
+// ==========================================
+// CATEGORY DROPDOWN – FIGMA STYLE
+// ==========================================
 
 .create-survey__category {
   position: relative;
@@ -194,6 +229,8 @@
   }
 }
 
+// CATEGORY ARROW
+
 .create-survey__category-arrow {
   flex-shrink: 0;
   color: #fefdff;
@@ -204,6 +241,8 @@
 .create-survey__category-arrow--open {
   color: #ee9236;
 }
+
+// SELECTED CATEGORY
 
 .create-survey__category-selected {
   display: block;
@@ -216,6 +255,8 @@
   line-height: 1.4;
 }
 
+// CATEGORY MENU
+
 .create-survey__category-menu {
   position: absolute;
   top: 100%;
@@ -227,8 +268,11 @@
 
   border-radius: 2px;
   background-color: #ffffff;
+
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
+// CATEGORY OPTIONS
 
 .create-survey__category-option {
   display: block;
@@ -253,7 +297,9 @@
   }
 }
 
+// ==========================================
 // QUESTIONS LAYOUT
+// ==========================================
 
 .create-survey__questions {
   display: grid;
@@ -271,7 +317,9 @@
   }
 }
 
+// ==========================================
 // ANSWERS HEADER
+// ==========================================
 
 .create-survey__answers-header {
   display: flex;
@@ -300,7 +348,9 @@
   }
 }
 
+// ==========================================
 // ANSWER INPUTS
+// ==========================================
 
 .create-survey__answer {
   display: flex;
@@ -333,7 +383,9 @@
   }
 }
 
+// ==========================================
 // ADD ANSWER BUTTON
+// ==========================================
 
 .create-survey__add-answer {
   display: inline-flex;
@@ -346,7 +398,7 @@
   border: none;
   border-bottom: 1px solid #ffffff;
 
-  background: transparent;
+  background-color: transparent;
   color: #ffffff;
 
   font-family: "Mulish", sans-serif;
@@ -361,7 +413,9 @@
   }
 }
 
+// ==========================================
 // ADD QUESTION BUTTON
+// ==========================================
 
 .create-survey__add-question {
   display: inline-flex;
@@ -391,13 +445,17 @@
   }
 }
 
-// FOOTER AND PUBLISH BUTTON
+// ==========================================
+// FOOTER
+// ==========================================
 
 .create-survey__footer {
   display: flex;
   justify-content: flex-end;
   margin-top: 32px;
 }
+
+// PUBLISH BUTTON
 
 .create-survey__publish {
   min-height: 48px;
@@ -420,7 +478,61 @@
   }
 }
 
-// RESPONSIVE FORM
+// ==========================================
+// PUBLISH TOAST – FIGMA STYLE
+// ==========================================
+
+.create-survey__toast {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+
+  width: 320px;
+  min-height: 76px;
+  padding: 20px 22px;
+
+  border-radius: 5px 35px 5px 5px;
+  background-color: #ffe6d0;
+  color: #35273a;
+
+  font-family: "Nerko One", cursive;
+  font-size: 20px;
+  line-height: 1.2;
+
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.create-survey__toast-text {
+  max-width: 220px;
+}
+
+.create-survey__toast-close {
+  flex-shrink: 0;
+
+  padding: 0;
+  border: none;
+  background-color: transparent;
+
+  color: #35273a;
+  font-family: "Mulish", sans-serif;
+  font-size: 18px;
+
+  cursor: pointer;
+
+  &:hover {
+    color: #ee9236;
+  }
+}
+
+// ==========================================
+// RESPONSIVE
+// ==========================================
 
 @media (max-width: 900px) {
   .create-survey {
@@ -460,5 +572,11 @@
 
   .create-survey__answers-header {
     flex-wrap: wrap;
+  }
+
+  .create-survey__toast {
+    right: 16px;
+    bottom: 16px;
+    width: min(320px, calc(100vw - 32px));
   }
 }
