@@ -1,0 +1,85 @@
+// SINGLE SURVEY PAGE
+
+.single-survey {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px 24px;
+  background-color: #fefdff;
+
+  // HEADER
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    max-width: 1218px;
+    height: 48px;
+    margin: 0 auto;
+  }
+
+  // POLL APP LOGO
+
+  &__logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 7px;
+
+    width: 119px;
+    height: 43.76px;
+    padding: 0;
+
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    img {
+      display: block;
+      width: 119px;
+      height: 43.76px;
+      object-fit: contain;
+    }
+  }
+
+  // CREATE SURVEY BUTTON
+
+  &__create-button {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    width: 157px;
+    height: 48px;
+    padding: 12px 16px;
+
+    border: none;
+    border-radius: 10px;
+
+    background-color: #ffcfa1;
+    color: #221227;
+
+    font-family: "Nokora", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 100%;
+    letter-spacing: 0;
+    white-space: nowrap;
+
+    cursor: pointer;
+  }
+}
+
+// RESPONSIVE HEADER
+
+@media (max-width: 600px) {
+  .single-survey {
+    padding: 24px 16px;
+  }
+}

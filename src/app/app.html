@@ -505,6 +505,40 @@
       </div>
     }
 
+   </main>
+
+} @else if (currentPage === 'single-survey') {
+
+  <main class="single-survey">
+
+    <!-- SINGLE SURVEY HEADER -->
+    <header class="single-survey__header">
+
+      <!-- LOGO -->
+      <button
+        class="single-survey__logo"
+        type="button"
+        aria-label="Go to home page"
+        (click)="goHome()"
+      >
+        <img
+          src="/assets/pollapplogo.svg"
+          alt="Poll App"
+        />
+      </button>
+
+      <!-- CREATE SURVEY BUTTON -->
+      <button
+        class="single-survey__create-button"
+        type="button"
+        (click)="createSurvey()"
+      >
+        Create survey
+      </button>
+
+    </header>
+
   </main>
 
 }
+

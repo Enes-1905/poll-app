@@ -28,7 +28,7 @@ interface SurveyQuestion {
   styleUrl: './app.scss',
 })
 export class App {
-  currentPage: 'home' | 'create-survey' = 'home';
+ currentPage: 'home' | 'create-survey' | 'single-survey' = 'home';
 
   activeTab: 'active' | 'past' = 'active';
 
@@ -302,5 +302,6 @@ showPublishToast(): void {
 
 closePublishToast(): void {
   this.publishToastVisible = false;
+  this.currentPage = 'single-survey';
 }
 }
