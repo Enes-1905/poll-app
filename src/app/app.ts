@@ -21,6 +21,19 @@ interface SurveyQuestion {
   answers: SurveyAnswer[];
 }
 
+interface ResultAnswer {
+  text: string;
+  votes: number;
+  selected: boolean;
+}
+
+interface ResultQuestion {
+  id: number;
+  text: string;
+  multipleAnswers: boolean;
+  answers: ResultAnswer[];
+}
+
 @Component({
   selector: 'app-root',
   imports: [FormsModule],
@@ -28,7 +41,7 @@ interface SurveyQuestion {
   styleUrl: './app.scss',
 })
 export class App {
- currentPage: 'home' | 'create-survey' | 'single-survey' = 'home';
+  currentPage: 'home' | 'create-survey' | 'single-survey' = 'home';
 
   activeTab: 'active' | 'past' = 'active';
 
@@ -43,32 +56,162 @@ export class App {
     'Healthy Lifestyle',
   ];
 
-// CREATE SURVEY
+  // CREATE SURVEY
 
-surveyName = '';
-surveyEndDate = '';
-surveyCategory = '';
-surveyDescription = '';
+  surveyName = '';
+  surveyEndDate = '';
+  surveyCategory = '';
+  surveyDescription = '';
 
-publishToastVisible = false;
-// CATEGORY DROPDOWN (CREATE SURVEY)
+  publishToastVisible = false;
 
-surveyCategoryOpen = false;
+  // CATEGORY DROPDOWN
 
-surveyCategoryOptions = [
-  'Team Activities',
-  'Health & Wellness',
-  'Gaming & Entertainment',
-  'Education & Learning',
-  'Lifestyle & Preferences',
-  'Technology & Innovation',
-];
+  surveyCategoryOpen = false;
+
+  surveyCategoryOptions = [
+    'Team Activities',
+    'Health & Wellness',
+    'Gaming & Entertainment',
+    'Education & Learning',
+    'Lifestyle & Preferences',
+    'Technology & Innovation',
+  ];
 
   private nextQuestionId = 1;
   private nextAnswerId = 1;
 
   questions: SurveyQuestion[] = [
     this.createQuestion(),
+  ];
+
+  // SINGLE SURVEY INFORMATION
+
+  singleSurveyTitle = "Let's Plan the Next Team Event Together";
+
+  singleSurveyCategory = 'Team activities';
+
+  singleSurveyEndDate = ''; 
+
+  singleSurveyDescription =
+    'We want to create team activities that everyone will enjoy – ' +
+    'share your preferences and ideas in our survey to help us ' +
+    'plan better experiences together.';
+
+  surveyCompleted = false;
+
+  // SINGLE SURVEY QUESTIONS
+  // INITIAL SURVEY DATA
+
+  resultQuestions: ResultQuestion[] = [
+    {
+      id: 1,
+      text: 'Which date would work best for you?',
+      multipleAnswers: true,
+      answers: [
+        {
+          text: '19.09.2025, Friday',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: '10.10.2025, Friday',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: '11.10.2025, Saturday',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: '31.10.2025, Friday',
+          votes: 0,
+          selected: false,
+        },
+      ],
+    },
+    {
+      id: 2,
+      text: 'Choose the activities you prefer',
+      multipleAnswers: true,
+      answers: [
+        {
+          text: 'Outdoor adventure like kayaking',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: 'Office Costume Party',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: 'Bowling, mini-golf, volleyball',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: 'Beach party, Music & cocktails',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: 'Escape room',
+          votes: 0,
+          selected: false,
+        },
+      ],
+    },
+    {
+      id: 3,
+      text: "What's most important to you in a team event?",
+      multipleAnswers: false,
+      answers: [
+        {
+          text: 'Team bonding',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: 'Food and drinks',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: 'Trying something new',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: 'Keeping it low-key and stress-free',
+          votes: 0,
+          selected: false,
+        },
+      ],
+    },
+    {
+      id: 4,
+      text: 'How long would you prefer the event to last?',
+      multipleAnswers: false,
+      answers: [
+        {
+          text: 'Half a day',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: 'Full day',
+          votes: 0,
+          selected: false,
+        },
+        {
+          text: 'Evening only',
+          votes: 0,
+          selected: false,
+        },
+      ],
+    },
   ];
 
   // EXISTING SURVEYS
@@ -177,10 +320,12 @@ surveyCategoryOptions = [
   }
 
   /**
-   * Opens a selected survey.
+   * Opens the available demo survey.
    */
   openSurvey(id: number): void {
-    // Single Survey page will be implemented later.
+    if (id === 1 || id === 6) {
+      this.currentPage = 'single-survey';
+    }
   }
 
   // QUESTION FUNCTIONS
@@ -233,15 +378,15 @@ surveyCategoryOptions = [
   }
 
   /**
-   * Adds an answer to the selected question.
+   * Adds an answer while keeping a maximum of six.
    */
-addAnswer(question: SurveyQuestion): void {
-  if (question.answers.length >= 6) {
-    return;
-  }
+  addAnswer(question: SurveyQuestion): void {
+    if (question.answers.length >= 6) {
+      return;
+    }
 
-  question.answers.push(this.createAnswer());
-}
+    question.answers.push(this.createAnswer());
+  }
 
   /**
    * Removes an answer while keeping at least two.
@@ -286,22 +431,122 @@ addAnswer(question: SurveyQuestion): void {
   clearSurveyDescription(): void {
     this.surveyDescription = '';
   }
+
   // CREATE SURVEY CATEGORY FUNCTIONS
 
-toggleSurveyCategory(): void {
-  this.surveyCategoryOpen = !this.surveyCategoryOpen;
-}
+  toggleSurveyCategory(): void {
+    this.surveyCategoryOpen = !this.surveyCategoryOpen;
+  }
 
-selectSurveyCategory(category: string): void {
-  this.surveyCategory = category;
-  this.surveyCategoryOpen = false;
-}
-showPublishToast(): void {
-  this.publishToastVisible = true;
-}
+  selectSurveyCategory(category: string): void {
+    this.surveyCategory = category;
+    this.surveyCategoryOpen = false;
+  }
 
-closePublishToast(): void {
-  this.publishToastVisible = false;
-  this.currentPage = 'single-survey';
-}
+  // PUBLISH TOAST FUNCTIONS
+
+  showPublishToast(): void {
+    this.publishToastVisible = true;
+  }
+
+  closePublishToast(): void {
+    this.publishToastVisible = false;
+    this.currentPage = 'single-survey';
+  }
+
+  // SINGLE SURVEY ANSWER SELECTION
+
+  /**
+   * Selects or deselects an answer.
+   */
+  toggleResultAnswer(
+    question: ResultQuestion,
+    answer: ResultAnswer,
+  ): void {
+    if (this.surveyCompleted) return;
+
+    const wasSelected = answer.selected;
+
+    if (!question.multipleAnswers) {
+      this.clearResultSelections(question);
+    }
+
+    answer.selected = !wasSelected;
+  }
+
+  /**
+   * Clears all selections for one question.
+   */
+  private clearResultSelections(
+    question: ResultQuestion,
+  ): void {
+    question.answers.forEach((answer) => {
+      answer.selected = false;
+    });
+  }
+
+  // LIVE RESULT CALCULATIONS
+
+  /**
+   * Returns the total number of votes for a question.
+   */
+  getTotalVotes(question: ResultQuestion): number {
+    return question.answers.reduce(
+      (total, answer) => total + answer.votes,
+      0,
+    );
+  }
+
+  /**
+   * Calculates an answer's percentage of all votes.
+   */
+  getAnswerPercentage(
+    question: ResultQuestion,
+    answer: ResultAnswer,
+  ): number {
+    const totalVotes = this.getTotalVotes(question);
+
+    if (totalVotes === 0) {
+      return 0;
+    }
+
+    return Math.round((answer.votes / totalVotes) * 100);
+  }
+
+  // COMPLETE SURVEY
+
+  /**
+   * Checks whether every question has an answer.
+   */
+  canCompleteSurvey(): boolean {
+    return this.resultQuestions.every((question) =>
+      question.answers.some((answer) => answer.selected),
+    );
+  }
+
+  /**
+   * Submits the selected answers once.
+   */
+  completeSurvey(): void {
+    if (this.surveyCompleted || !this.canCompleteSurvey()) {
+      return;
+    }
+
+    this.resultQuestions.forEach((question) => {
+      this.addQuestionVotes(question);
+    });
+
+    this.surveyCompleted = true;
+  }
+
+  /**
+   * Adds votes to the selected answers.
+   */
+  private addQuestionVotes(question: ResultQuestion): void {
+    question.answers.forEach((answer) => {
+      if (answer.selected) {
+        answer.votes++;
+      }
+    });
+  }
 }
