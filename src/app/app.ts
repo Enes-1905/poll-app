@@ -367,12 +367,12 @@ export class App {
   }
 
   /**
-   * Opens a published survey or the available team demo.
+   * Opens a published survey or a demo survey.
    */
   openSurvey(id: number): void {
     const survey = this.surveys.find((item) => item.id === id);
     if (!survey) return;
-    if (!survey.questions && (id === 1 || id === 6)) {
+    if (!survey.questions && (id >= 1 && id <= 6)) {
       this.prepareDemoSurvey(survey);
     }
     if (!survey.questions) return;
@@ -382,6 +382,57 @@ export class App {
   }
 
   private prepareDemoSurvey(survey: Survey): void {
+    if (survey.id === 2 || survey.id === 4) {
+      survey.description = 'Share your gaming preferences and help us discover what players enjoy most.';
+      survey.questions = this.createGamingQuestions();
+      return;
+    }
+    if (survey.id === 3 || survey.id === 5) {
+      survey.description = 'Share your everyday habits and preferences for a healthier lifestyle.';
+      survey.questions = this.createWellnessQuestions();
+      return;
+    }
+    this.prepareTeamSurvey(survey);
+  }
+
+  private createGamingQuestions(): ResultQuestion[] {
+    return [
+      this.createDemoQuestion(1, 'What is your favorite gaming platform?', false,
+        ['PC', 'PlayStation', 'Xbox', 'Nintendo Switch', 'Mobile']),
+      this.createDemoQuestion(2, 'Which game genres do you prefer?', true,
+        ['Action', 'Sports', 'Role-playing', 'Strategy', 'Adventure']),
+      this.createDemoQuestion(3, 'How often do you play video games?', false,
+        ['Daily', 'Several times a week', 'Once a week', 'Rarely', 'Never']),
+      this.createDemoQuestion(4, 'Which game mode do you prefer?', false,
+        ['Single-player', 'Multiplayer', 'Both']),
+    ];
+  }
+
+  private createWellnessQuestions(): ResultQuestion[] {
+    return [
+      this.createDemoQuestion(1, 'How often do you exercise?', false,
+        ['Daily', 'Several times a week', 'Once a week', 'Rarely', 'Never']),
+      this.createDemoQuestion(2, 'Which activities do you enjoy?', true,
+        ['Walking', 'Running', 'Strength training', 'Yoga', 'Cycling']),
+      this.createDemoQuestion(3, 'Which wellness goals matter most to you?', true,
+        ['Balanced nutrition', 'Better sleep', 'More exercise', 'Less stress']),
+      this.createDemoQuestion(4, 'How much time do you spend on relaxation daily?', false,
+        ['Less than 15 minutes', '15–30 minutes', '30–60 minutes', 'More than an hour']),
+    ];
+  }
+
+  private createDemoQuestion(
+    id: number, text: string, multipleAnswers: boolean, options: string[],
+  ): ResultQuestion {
+    return {
+      id,
+      text,
+      multipleAnswers,
+      answers: options.map((text) => ({ text, votes: 0, selected: false })),
+    };
+  }
+
+  private prepareTeamSurvey(survey: Survey): void {
     survey.description = 'We want to create team activities that everyone will enjoy – ' +
       'share your preferences and ideas in our survey to help us ' +
       'plan better experiences together.';
