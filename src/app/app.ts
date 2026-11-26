@@ -7,6 +7,10 @@ interface Survey {
   title: string;
   daysLeft: number;
   status: 'active' | 'past';
+  endDate?: string;
+  description?: string;
+  questions?: ResultQuestion[];
+  completed?: boolean;
 }
 
 interface SurveyAnswer {
@@ -64,6 +68,7 @@ export class App {
   surveyDescription = '';
 
   publishToastVisible = false;
+  validationToastVisible = false;
 
   // CATEGORY DROPDOWN
 
@@ -78,6 +83,8 @@ export class App {
     'Technology & Innovation',
   ];
 
+  private nextSurveyId = 7;
+  private currentSurvey?: Survey;
   private nextQuestionId = 1;
   private nextAnswerId = 1;
 
@@ -103,7 +110,7 @@ export class App {
   // SINGLE SURVEY QUESTIONS
   // INITIAL SURVEY DATA
 
-  resultQuestions: ResultQuestion[] = [
+  private demoQuestions: ResultQuestion[] = [
     {
       id: 1,
       text: 'Which date would work best for you?',
@@ -214,6 +221,8 @@ export class App {
     },
   ];
 
+  resultQuestions: ResultQuestion[] = [];
+
   // EXISTING SURVEYS
 
   surveys: Survey[] = [
@@ -316,16 +325,42 @@ export class App {
    * Returns to the home page.
    */
   goHome(): void {
+    this.closeValidationToast();
     this.currentPage = 'home';
   }
 
   /**
-   * Opens the available demo survey.
+   * Opens a published survey or the available team demo.
    */
   openSurvey(id: number): void {
-    if (id === 1 || id === 6) {
-      this.currentPage = 'single-survey';
+    const survey = this.surveys.find((item) => item.id === id);
+    if (!survey) return;
+    if (!survey.questions && (id === 1 || id === 6)) {
+      this.prepareDemoSurvey(survey);
     }
+    if (!survey.questions) return;
+    this.currentSurvey = survey;
+    this.loadSurvey(survey);
+    this.currentPage = 'single-survey';
+  }
+
+  private prepareDemoSurvey(survey: Survey): void {
+    survey.description = 'We want to create team activities that everyone will enjoy – ' +
+      'share your preferences and ideas in our survey to help us ' +
+      'plan better experiences together.';
+    survey.questions = this.demoQuestions.map((question) => ({
+      ...question,
+      answers: question.answers.map((answer) => ({ ...answer })),
+    }));
+  }
+
+  private loadSurvey(survey: Survey): void {
+    this.singleSurveyTitle = survey.title;
+    this.singleSurveyCategory = survey.category;
+    this.singleSurveyEndDate = survey.endDate ?? '';
+    this.singleSurveyDescription = survey.description ?? '';
+    this.resultQuestions = survey.questions ?? [];
+    this.surveyCompleted = survey.completed ?? false;
   }
 
   // QUESTION FUNCTIONS
@@ -446,12 +481,80 @@ export class App {
   // PUBLISH TOAST FUNCTIONS
 
   showPublishToast(): void {
+    if (this.publishToastVisible || !this.isDraftValid()) return;
+    this.closeValidationToast();
+    const survey = this.buildPublishedSurvey();
+    this.surveys.push(survey);
+    this.currentSurvey = survey;
+    if (!this.categories.includes(survey.category)) {
+      this.categories.push(survey.category);
+    }
     this.publishToastVisible = true;
+  }
+
+  closeValidationToast(): void {
+    this.validationToastVisible = false;
+  }
+
+  private isDraftValid(): boolean {
+    const valid = this.surveyName.trim() && this.surveyCategory &&
+      this.questions.every((question) => question.text.trim() &&
+        question.answers.every((answer) => answer.text.trim()));
+    if (!valid) {
+      this.validationToastVisible = true;
+    }
+    return Boolean(valid);
+  }
+
+  private buildPublishedSurvey(): Survey {
+    return {
+      id: this.nextSurveyId++,
+      title: this.surveyName.trim(),
+      category: this.surveyCategory,
+      description: this.surveyDescription.trim(),
+      endDate: this.surveyEndDate,
+      daysLeft: this.calculateDaysLeft(),
+      status: 'active',
+      questions: this.questions.map((question) => this.toResultQuestion(question)),
+      completed: false,
+    };
+  }
+
+  private calculateDaysLeft(): number {
+    if (!this.surveyEndDate) return 0;
+    const end = new Date(this.surveyEndDate + 'T23:59:59');
+    return Math.max(0, Math.ceil((end.getTime() - Date.now()) / 86400000));
+  }
+
+  private toResultQuestion(question: SurveyQuestion): ResultQuestion {
+    return {
+      id: question.id,
+      text: question.text.trim(),
+      multipleAnswers: question.multipleAnswers,
+      answers: question.answers.map((answer) => ({
+        text: answer.text.trim(),
+        votes: 0,
+        selected: false,
+      })),
+    };
   }
 
   closePublishToast(): void {
     this.publishToastVisible = false;
-    this.currentPage = 'single-survey';
+    if (!this.currentSurvey) return;
+    this.openSurvey(this.currentSurvey.id);
+    this.resetDraft();
+    this.activeTab = 'active';
+    this.selectedCategory = 'All Surveys';
+  }
+
+  private resetDraft(): void {
+    this.surveyName = '';
+    this.surveyEndDate = '';
+    this.surveyCategory = '';
+    this.surveyDescription = '';
+    this.surveyCategoryOpen = false;
+    this.questions = [this.createQuestion()];
   }
 
   // SINGLE SURVEY ANSWER SELECTION
@@ -537,6 +640,7 @@ export class App {
     });
 
     this.surveyCompleted = true;
+    if (this.currentSurvey) this.currentSurvey.completed = true;
   }
 
   /**
