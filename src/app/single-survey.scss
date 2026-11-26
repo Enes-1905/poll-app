@@ -92,7 +92,6 @@
 
     width: 100%;
     max-width: 1059px;
-    min-height: 855px;
 
     margin-top: 40px;
     margin-left: max(0px, calc((100% - 1218px) / 2));
@@ -108,7 +107,7 @@
 
     flex: 0 1 702px;
     min-width: 0;
-    min-height: 855px;
+    min-height: max(0px, calc(100vh - 168px));
 
     padding: 40px;
 
@@ -163,7 +162,6 @@
   &__title {
     width: 100%;
     max-width: 622px;
-    min-height: 103px;
     margin: 0;
 
     color: #ee9236;
@@ -173,6 +171,7 @@
     font-weight: 400;
     line-height: 50px;
     letter-spacing: 0;
+    overflow-wrap: anywhere;
   }
 
   // SURVEY DESCRIPTION

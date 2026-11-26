@@ -83,6 +83,7 @@ export class App {
     'Technology & Innovation',
   ];
 
+  private readonly storageKey = 'poll-app-surveys-v1';
   private nextSurveyId = 7;
   private currentSurvey?: Survey;
   private nextQuestionId = 1;
@@ -269,6 +270,42 @@ export class App {
       status: 'active',
     },
   ];
+
+  // LOCAL STORAGE
+
+  constructor() {
+    this.loadStoredSurveys();
+  }
+
+  private loadStoredSurveys(): void {
+    try {
+      const stored = localStorage.getItem(this.storageKey);
+      if (!stored) return;
+      const surveys: Survey[] = JSON.parse(stored);
+      if (!Array.isArray(surveys) || surveys.length < 6) return;
+      this.surveys = surveys;
+      this.restoreSurveyMetadata();
+    } catch (error) {
+      console.warn('Could not load saved surveys.', error);
+    }
+  }
+
+  private restoreSurveyMetadata(): void {
+    this.nextSurveyId = Math.max(6, ...this.surveys.map((survey) => survey.id)) + 1;
+    this.surveys.forEach((survey) => {
+      if (!this.categories.includes(survey.category)) {
+        this.categories.push(survey.category);
+      }
+    });
+  }
+
+  private saveSurveys(): void {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(this.surveys));
+    } catch (error) {
+      console.warn('Could not save surveys.', error);
+    }
+  }
 
   // HOME PAGE
 
@@ -489,6 +526,7 @@ export class App {
     if (!this.categories.includes(survey.category)) {
       this.categories.push(survey.category);
     }
+    this.saveSurveys();
     this.publishToastVisible = true;
   }
 
@@ -641,6 +679,7 @@ export class App {
 
     this.surveyCompleted = true;
     if (this.currentSurvey) this.currentSurvey.completed = true;
+    this.saveSurveys();
   }
 
   /**
