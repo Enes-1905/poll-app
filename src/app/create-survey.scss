@@ -85,7 +85,7 @@
 
   &__fields {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 64px;
   }
 
@@ -97,6 +97,7 @@
   // FORM FIELDS
 
   &__field {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -115,6 +116,8 @@
     input,
     textarea {
       min-width: 0;
+      flex: 1;
+      max-width: 100%;
       border: none;
       border-radius: 5px;
 
@@ -137,12 +140,14 @@
       height: 110px;
       padding: 12px;
       resize: vertical;
+      overflow-wrap: anywhere;
     }
   }
 
   // INPUT ROW
 
   &__input-row {
+    min-width: 0;
     display: flex;
     align-items: flex-start;
     gap: 8px;
@@ -187,7 +192,7 @@
 
   &__bottom-fields {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
     margin-top: 16px;
   }
@@ -200,6 +205,8 @@
 .create-survey__category {
   position: relative;
   width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .create-survey__category-trigger {
@@ -221,6 +228,7 @@
   font-size: 14px;
   font-weight: 700;
   text-align: left;
+  overflow-wrap: anywhere;
 
   cursor: pointer;
 
@@ -287,6 +295,7 @@
   font-size: 12px;
   font-weight: 400;
   text-align: left;
+  overflow-wrap: anywhere;
 
   cursor: pointer;
 
@@ -338,7 +347,7 @@
 
     font-size: 14px;
     font-weight: 400;
-    white-space: nowrap;
+    white-space: normal;
     cursor: pointer;
   }
 
@@ -539,13 +548,13 @@
     padding: 32px 24px;
 
     &__fields {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 32px;
     }
   }
 
   .create-survey__questions {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 32px;
     margin-top: 40px;
   }
@@ -566,7 +575,7 @@
     }
 
     &__bottom-fields {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 
@@ -577,7 +586,7 @@
   .create-survey__toast {
     right: 16px;
     bottom: 16px;
-    width: min(320px, calc(100vw - 32px));
+    width: min(320px, calc(100% - 32px));
   }
 }
 

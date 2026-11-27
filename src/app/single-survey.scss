@@ -556,3 +556,28 @@
     }
   }
 }
+// LONG TEXT PROTECTION
+
+.single-survey {
+  &__meta,
+  &__description,
+  &__question h3,
+  &__result-question h3 {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  &__answer {
+    min-width: 0;
+
+    > span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__result-track {
+    min-width: 0;
+  }
+}
