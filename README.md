@@ -1,59 +1,120 @@
 # PollApp
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.6.
+PollApp is a responsive web application for creating, managing
+and participating in surveys. Users can create custom surveys,
+select categories, set deadlines and view voting results.
 
-## Development server
+## Live Demo
 
-To start a local development server, run:
+https://enes-kurt.developerakademie.net/poll-app/
+
+## Features
+
+- Create and publish custom surveys.
+- Add multiple questions and answer options.
+- Support single-choice and multiple-choice questions.
+- Set optional survey descriptions and deadlines.
+- Filter surveys by category.
+- Switch between active and past surveys.
+- Highlight surveys that are ending soon.
+- Display dynamically updated voting results.
+- Prevent repeated voting on completed surveys.
+- Prevent voting on expired surveys.
+- Validate required fields and character limits.
+- Prevent invalid survey deadlines.
+- Store surveys and voting progress using LocalStorage.
+- Responsive design for desktop, tablet and mobile devices.
+- Swipeable highlight cards on mobile devices.
+
+## Technologies
+
+- Angular
+- TypeScript
+- HTML5
+- SCSS
+- LocalStorage
+- Git and GitHub
+
+## Getting Started
+
+### Prerequisites
+
+Make sure the following tools are installed:
+
+- Node.js
+- npm
+- Git
+
+### Installation
+
+Clone the repository:
 
 ```bash
-ng serve
+git clone https://github.com/Enes-1905/poll-app.git
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Navigate to the project directory:
 
 ```bash
-ng generate component component-name
+cd poll-app
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Install the required dependencies:
 
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
+### Development Server
 
-To build the project run:
+Start the application:
 
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Open your browser and navigate to:
 
-## Running unit tests
+http://localhost:4200/
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+The application automatically reloads when source files
+are modified.
+
+### Production Build
+
+To create a production build, run:
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+For deployment in the `/poll-app/` subdirectory, run:
 
 ```bash
-ng e2e
+npm run build -- --base-href /poll-app/
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+The generated build files are stored in the `dist/` directory.
 
-## Additional Resources
+## Data Storage
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+PollApp uses the browser's LocalStorage to save surveys,
+votes and completion states.
+
+Data remains available after refreshing the page.
+No backend, database or user account is required.
+
+Survey data and voting results are stored locally and
+are not synchronized across different browsers or devices.
+
+## Project Purpose
+
+This project was developed as part of the frontend development
+training at Developer Akademie.
+
+The focus is on responsive web design, Angular development,
+form validation, interactive user interfaces and clean code.
+
+## Author
+
+Enes Kurt
