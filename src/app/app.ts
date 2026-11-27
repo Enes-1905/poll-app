@@ -676,13 +676,38 @@ export class App {
   }
 
   private isDraftValid(): boolean {
-    const valid = this.surveyName.trim() && this.surveyCategory &&
-      this.questions.every((question) => question.text.trim() &&
-        question.answers.every((answer) => answer.text.trim()));
-    if (!valid) {
-      this.validationToastVisible = true;
-    }
-    return Boolean(valid);
+    const valid = this.isSurveyInfoValid() && this.isEndDateValid() &&
+      this.questions.length > 0 &&
+      this.questions.every((question) => this.isQuestionValid(question));
+    this.validationToastVisible = !valid;
+    return valid;
+  }
+
+  private isSurveyInfoValid(): boolean {
+    return this.isTextValid(this.surveyName, 40) &&
+      this.surveyCategoryOptions.includes(this.surveyCategory) &&
+      this.surveyDescription.length <= 250;
+  }
+
+  private isQuestionValid(question: SurveyQuestion): boolean {
+    return this.isTextValid(question.text, 100) &&
+      question.answers.length >= 2 && question.answers.length <= 6 &&
+      question.answers.every((answer) => this.isTextValid(answer.text, 50));
+  }
+
+  private isTextValid(text: string, maxLength: number): boolean {
+    return text.trim().length > 0 && text.length <= maxLength;
+  }
+
+  get minEndDate(): string {
+    return this.dateWithOffset(0);
+  }
+
+  private isEndDateValid(): boolean {
+    if (!this.surveyEndDate) return true;
+    const date = new Date(this.surveyEndDate + 'T00:00:00');
+    return Number.isFinite(date.getTime()) &&
+      this.surveyEndDate >= this.minEndDate;
   }
 
   private buildPublishedSurvey(): Survey {

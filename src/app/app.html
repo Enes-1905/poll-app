@@ -227,6 +227,7 @@
                 type="text"
                 placeholder="Enter survey name"
                 required
+                maxlength="40"
                 [(ngModel)]="surveyName"
               />
 
@@ -258,6 +259,7 @@
                   id="survey-end-date"
                   name="surveyEndDate"
                   type="date"
+                  [min]="minEndDate"
                   [(ngModel)]="surveyEndDate"
                 />
 
@@ -347,6 +349,7 @@
               <textarea
                 id="survey-description"
                 name="surveyDescription"
+                maxlength="250"
                 [(ngModel)]="surveyDescription"
               ></textarea>
 
@@ -391,6 +394,7 @@
                     ? 'Which date would work best for you?'
                     : 'Enter your question'"
                   required
+                  maxlength="100"
                   [(ngModel)]="question.text"
                 />
 
@@ -438,6 +442,7 @@
                   [name]="'answer-' + answer.id"
                   [attr.aria-label]="'Answer ' + getAnswerLabel(answerIndex)"
                   required
+                  maxlength="50"
                   [(ngModel)]="answer.text"
                 />
 
@@ -514,7 +519,7 @@
       <div class="create-survey__validation-toast">
         <div class="create-survey__validation-content" role="alert">
           <h2>Complete your survey</h2>
-          <p>Please enter a survey name, choose a category and complete all questions and answers.</p>
+          <p>Please complete all required fields, respect the character limits and choose today or a future end date.</p>
         </div>
         <button
           class="create-survey__validation-close"
