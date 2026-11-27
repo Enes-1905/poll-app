@@ -84,10 +84,10 @@
   border-radius: 10px;
 
   background-color: #ffcfa1;
-  color: #35273a;
+  color: #221227;
 
-  font-family: "Mulish", sans-serif;
-  font-size: 16px;
+  font-family: "Nokora", sans-serif;
+  font-size: 18px;
   font-weight: 700;
   line-height: 1;
 
@@ -110,6 +110,37 @@
 
 .new-survey-button__icon {
   display: none;
+  filter: brightness(0);
+}
+
+// DESKTOP NEW SURVEY HOVER
+@media (min-width: 769px) {
+  .hero .new-survey-button {
+    box-sizing: border-box;
+    white-space: nowrap;
+    transition: width 0.2s ease, background-color 0.2s ease, gap 0.2s ease;
+    gap: 0;
+
+    .new-survey-button__icon {
+      display: block;
+      width: 0;
+      height: 20px;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: width 0.2s ease, opacity 0.2s ease;
+    }
+
+    &:hover,
+    &:focus-visible {
+      width: 172px;
+      gap: 12px;
+
+      .new-survey-button__icon {
+        width: 20px;
+        opacity: 1;
+      }
+    }
+  }
 }
 
 .hero__image {
