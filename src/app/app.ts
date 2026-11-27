@@ -307,6 +307,60 @@ export class App {
     }
   }
 
+  // HIGHLIGHT CAROUSEL DRAG
+
+  carouselDragging = false;
+  private carouselPointerId: number | null = null;
+  private carouselStartX = 0;
+  private carouselStartScroll = 0;
+  private carouselMoved = false;
+
+  startCarouselDrag(event: PointerEvent): void {
+    const carousel = event.currentTarget as HTMLElement;
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    this.carouselMoved = false;
+    if (carousel.scrollWidth <= carousel.clientWidth) return;
+    this.carouselPointerId = event.pointerId;
+    this.carouselStartX = event.clientX;
+    this.carouselStartScroll = carousel.scrollLeft;
+  }
+
+  moveCarouselDrag(event: PointerEvent): void {
+    if (this.carouselPointerId !== event.pointerId) return;
+    const carousel = event.currentTarget as HTMLElement;
+    const distance = event.clientX - this.carouselStartX;
+    if (!this.carouselMoved && Math.abs(distance) < 6) return;
+    this.carouselMoved = true;
+    this.carouselDragging = true;
+    carousel.classList.add('is-dragging');
+    carousel.setPointerCapture(event.pointerId);
+    carousel.scrollLeft = this.carouselStartScroll - distance;
+    event.preventDefault();
+  }
+
+  endCarouselDrag(event: PointerEvent): void {
+    if (this.carouselPointerId !== event.pointerId) return;
+    const carousel = event.currentTarget as HTMLElement;
+    this.carouselPointerId = null;
+    this.carouselDragging = false;
+    carousel.classList.remove('is-dragging');
+    if (carousel.hasPointerCapture(event.pointerId)) {
+      carousel.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  leaveCarouselDrag(event: PointerEvent): void {
+    if (!this.carouselDragging) this.endCarouselDrag(event);
+  }
+
+  openHighlightSurvey(event: MouseEvent, id: number): void {
+    if (this.carouselMoved && event.detail !== 0) {
+      this.carouselMoved = false;
+      return;
+    }
+    this.openSurvey(id);
+  }
+
   // HOME PAGE
 
   get highlightSurveys(): Survey[] {

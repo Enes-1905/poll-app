@@ -47,12 +47,21 @@
 
           <h3>Ending soon surveys</h3>
 
-          <div class="highlights__grid">
+          <div
+            class="highlights__grid"
+            [class.is-dragging]="carouselDragging"
+            (pointerdown)="startCarouselDrag($event)"
+            (pointermove)="moveCarouselDrag($event)"
+            (pointerup)="endCarouselDrag($event)"
+            (pointercancel)="endCarouselDrag($event)"
+            (lostpointercapture)="endCarouselDrag($event)"
+            (pointerleave)="leaveCarouselDrag($event)"
+          >
             @for (survey of highlightSurveys; track survey.id) {
               <button
                 class="highlight-card"
                 type="button"
-                (click)="openSurvey(survey.id)"
+                (click)="openHighlightSurvey($event, survey.id)"
               >
                 <div>
                   <span class="highlight-card__category">
