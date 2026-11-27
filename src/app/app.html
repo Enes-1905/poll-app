@@ -72,8 +72,14 @@
                 </div>
 
                 <span class="survey-badge">
-                  Ends in {{ survey.daysLeft }}
-                  {{ survey.daysLeft === 1 ? 'Day' : 'Days' }}
+                  @if (survey.status === 'past') {
+                    Ended
+                  } @else if (!survey.endDate) {
+                    No deadline
+                  } @else {
+                    Ends in {{ survey.daysLeft }}
+                    {{ survey.daysLeft === 1 ? 'Day' : 'Days' }}
+                  }
                 </span>
               </button>
             }
@@ -150,8 +156,14 @@
                 </span>
 
                 <span class="survey-badge">
-                  Ends in {{ survey.daysLeft }}
-                  {{ survey.daysLeft === 1 ? 'Day' : 'Days' }}
+                  @if (survey.status === 'past') {
+                    Ended
+                  } @else if (!survey.endDate) {
+                    No deadline
+                  } @else {
+                    Ends in {{ survey.daysLeft }}
+                    {{ survey.daysLeft === 1 ? 'Day' : 'Days' }}
+                  }
                 </span>
               </button>
             } @empty {
@@ -204,7 +216,7 @@
           <div class="create-survey__field">
 
             <label for="survey-name">
-              Survey name
+              Survey name *
             </label>
 
             <div class="create-survey__input-row">
@@ -214,6 +226,7 @@
                 name="surveyName"
                 type="text"
                 placeholder="Enter survey name"
+                required
                 [(ngModel)]="surveyName"
               />
 
@@ -270,12 +283,12 @@
                 <button
                   class="create-survey__category-trigger"
                   type="button"
-                  aria-label="Choose category"
+                  aria-label="Choose category (required)"
                   [attr.aria-expanded]="surveyCategoryOpen"
                   aria-controls="survey-category-menu"
                   (click)="toggleSurveyCategory()"
                 >
-                  <span>Choose category</span>
+                  <span>Choose category *</span>
 
                   <span
                     class="create-survey__category-arrow"
@@ -365,7 +378,7 @@
             <div class="create-survey__field">
 
               <label [for]="'question-' + question.id">
-                {{ questionIndex + 1 }}. Question
+                {{ questionIndex + 1 }}. Question *
               </label>
 
               <div class="create-survey__input-row">
@@ -377,6 +390,7 @@
                   [placeholder]="questionIndex === 0
                     ? 'Which date would work best for you?'
                     : 'Enter your question'"
+                  required
                   [(ngModel)]="question.text"
                 />
 
@@ -396,7 +410,7 @@
             <!-- ANSWERS HEADER -->
             <div class="create-survey__answers-header">
 
-              <span>Answers</span>
+              <span>Answers *</span>
 
               <label>
                 <input
@@ -423,6 +437,7 @@
                   type="text"
                   [name]="'answer-' + answer.id"
                   [attr.aria-label]="'Answer ' + getAnswerLabel(answerIndex)"
+                  required
                   [(ngModel)]="answer.text"
                 />
 
@@ -572,7 +587,7 @@
     <!-- SURVEY AND LIVE RESULTS -->
     <div class="single-survey__content">
       <section class="single-survey__panel">
-        <span class="single-survey__badge">Published</span>
+        <span class="single-survey__badge">{{ isCurrentSurveyPast() ? 'Ended' : 'Published' }}</span>
         <div class="single-survey__meta">
           <span>Category: {{ singleSurveyCategory }}</span>
         </div>
@@ -592,7 +607,7 @@
                     <input
                       type="checkbox"
                       [checked]="answer.selected"
-                      [disabled]="surveyCompleted"
+                      [disabled]="surveyCompleted || isCurrentSurveyPast()"
                       (change)="toggleResultAnswer(question, answer)"
                     />
                     <span><strong>{{ getAnswerLabel(answerIndex) }}.</strong> {{ answer.text }}</span>
@@ -610,14 +625,14 @@
             [disabled]="surveyCompleted || !canCompleteSurvey()"
             (click)="completeSurvey()"
           >
-            {{ surveyCompleted ? 'Survey completed' : 'Complete survey' }}
+            {{ isCurrentSurveyPast() ? 'Survey ended' : (surveyCompleted ? 'Survey completed' : 'Complete survey') }}
           </button>
         </div>
       </section>
 
       <!-- LIVE RESULTS -->
       <aside class="single-survey__results" aria-label="Survey results">
-        <h2>Survey results <span>LIVE</span></h2>
+        <h2>Survey results <span>{{ isCurrentSurveyPast() ? 'FINAL' : 'LIVE' }}</span></h2>
         @for (question of resultQuestions; track question.id; let questionIndex = $index) {
           <section class="single-survey__result-question">
             <h3>{{ questionIndex + 1 }}. {{ question.text }}</h3>

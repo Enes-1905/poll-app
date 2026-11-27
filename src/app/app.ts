@@ -275,6 +275,43 @@ export class App {
 
   constructor() {
     this.loadStoredSurveys();
+    this.initializeDeadlines();
+    this.saveSurveys();
+  }
+
+  private initializeDeadlines(): void {
+    this.surveys.forEach((survey) => {
+      if (survey.id <= 6 && !survey.endDate) {
+        const offset = survey.id <= 3 ? survey.daysLeft - 1 : -survey.daysLeft - 1;
+        survey.endDate = this.dateWithOffset(offset);
+      }
+      this.refreshSurveyDeadline(survey);
+    });
+  }
+
+  private dateWithOffset(offset: number): string {
+    const date = new Date();
+    date.setDate(date.getDate() + offset);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${date.getFullYear()}-${month}-${day}`;
+  }
+
+  private deadlineTime(survey: Survey): number {
+    return survey.endDate
+      ? new Date(survey.endDate + 'T23:59:59.999').getTime()
+      : Infinity;
+  }
+
+  private isPast(survey: Survey): boolean {
+    return survey.status === 'past' || this.deadlineTime(survey) <= Date.now();
+  }
+
+  private refreshSurveyDeadline(survey: Survey): void {
+    const remaining = this.deadlineTime(survey) - Date.now();
+    survey.status = this.isPast(survey) ? 'past' : 'active';
+    survey.daysLeft = Number.isFinite(remaining)
+      ? Math.max(0, Math.ceil(remaining / 86400000)) : 0;
   }
 
   private loadStoredSurveys(): void {
@@ -364,30 +401,29 @@ export class App {
   // HOME PAGE
 
   get highlightSurveys(): Survey[] {
-    return [
-      this.surveys[0],
-      {
-        ...this.surveys[2],
-        category: 'Health & Wellness',
-        title: 'Fit & wellness survey!',
-      },
-      {
-        ...this.surveys[1],
-        category: 'Gaming & Entertainment',
-      },
-    ];
+    return this.surveys
+      .filter((survey) => !this.isPast(survey) && survey.endDate)
+      .sort((a, b) => this.deadlineTime(a) - this.deadlineTime(b))
+      .slice(0, 3)
+      .map((survey) => this.withCurrentDeadline(survey));
+  }
+
+  private withCurrentDeadline(survey: Survey): Survey {
+    const copy = { ...survey };
+    this.refreshSurveyDeadline(copy);
+    return copy;
   }
 
   get filteredSurveys(): Survey[] {
     return this.surveys.filter((survey) => {
-      const matchesTab = survey.status === this.activeTab;
+      const matchesTab = (this.isPast(survey) ? 'past' : 'active') === this.activeTab;
 
       const matchesCategory =
         this.selectedCategory === 'All Surveys' ||
         survey.category === this.selectedCategory;
 
       return matchesTab && matchesCategory;
-    });
+    }).map((survey) => this.withCurrentDeadline(survey));
   }
 
   setTab(tab: 'active' | 'past'): void {
@@ -502,7 +538,7 @@ export class App {
     this.singleSurveyEndDate = survey.endDate ?? '';
     this.singleSurveyDescription = survey.description ?? '';
     this.resultQuestions = survey.questions ?? [];
-    this.surveyCompleted = survey.completed ?? false;
+    this.surveyCompleted = this.isPast(survey) || (survey.completed ?? false);
   }
 
   // QUESTION FUNCTIONS
@@ -709,7 +745,7 @@ export class App {
     question: ResultQuestion,
     answer: ResultAnswer,
   ): void {
-    if (this.surveyCompleted) return;
+    if (this.surveyCompleted || this.isCurrentSurveyPast()) return;
 
     const wasSelected = answer.selected;
 
@@ -764,7 +800,12 @@ export class App {
   /**
    * Checks whether every question has an answer.
    */
+  isCurrentSurveyPast(): boolean {
+    return !!this.currentSurvey && this.isPast(this.currentSurvey);
+  }
+
   canCompleteSurvey(): boolean {
+    if (this.isCurrentSurveyPast()) return false;
     return this.resultQuestions.every((question) =>
       question.answers.some((answer) => answer.selected),
     );
