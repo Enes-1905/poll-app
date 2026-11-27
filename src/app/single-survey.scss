@@ -581,3 +581,36 @@
     min-width: 0;
   }
 }
+// SURVEY STATUS AND DISABLED ANSWERS
+
+.single-survey {
+  &__badge {
+    &--completed {
+      background-color: #d9edda;
+      color: #285c2e;
+    }
+
+    &--ended {
+      background-color: #e2dce5;
+      color: #625568;
+    }
+  }
+
+  &__answer:has(input:disabled) {
+    cursor: default;
+    color: #756a79;
+
+    input {
+      cursor: default;
+      border-color: #a99eae;
+
+      &:checked {
+        background-color: #a99eae;
+      }
+    }
+  }
+
+  &__complete-button:disabled {
+    cursor: default;
+  }
+}

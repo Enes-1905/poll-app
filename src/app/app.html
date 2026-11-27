@@ -592,7 +592,14 @@
     <!-- SURVEY AND LIVE RESULTS -->
     <div class="single-survey__content">
       <section class="single-survey__panel">
-        <span class="single-survey__badge">{{ isCurrentSurveyPast() ? 'Ended' : 'Published' }}</span>
+        <span
+          class="single-survey__badge"
+          [class.single-survey__badge--completed]="surveyCompleted && !isCurrentSurveyPast()"
+          [class.single-survey__badge--ended]="isCurrentSurveyPast()"
+          role="status"
+        >
+          {{ isCurrentSurveyPast() ? 'Ended' : (surveyCompleted ? 'Completed' : 'Published') }}
+        </span>
         <div class="single-survey__meta">
           <span>Category: {{ singleSurveyCategory }}</span>
         </div>
@@ -608,7 +615,10 @@
               }
               <div class="single-survey__answers">
                 @for (answer of question.answers; track $index; let answerIndex = $index) {
-                  <label class="single-survey__answer">
+                  <label
+                    class="single-survey__answer"
+                    [class.single-survey__answer--disabled]="surveyCompleted || isCurrentSurveyPast()"
+                  >
                     <input
                       type="checkbox"
                       [checked]="answer.selected"

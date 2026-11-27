@@ -799,7 +799,7 @@ export class App {
    */
   getTotalVotes(question: ResultQuestion): number {
     return question.answers.reduce(
-      (total, answer) => total + answer.votes,
+      (total, answer) => total + this.getDisplayedVotes(answer),
       0,
     );
   }
@@ -817,7 +817,13 @@ export class App {
       return 0;
     }
 
-    return Math.round((answer.votes / totalVotes) * 100);
+    return Math.round((this.getDisplayedVotes(answer) / totalVotes) * 100);
+  }
+
+  private getDisplayedVotes(answer: ResultAnswer): number {
+    const preview = !this.surveyCompleted && !this.isCurrentSurveyPast() &&
+      answer.selected;
+    return answer.votes + (preview ? 1 : 0);
   }
 
   // COMPLETE SURVEY
